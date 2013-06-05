@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/javascripts/jquery-1.9.1.min.js"></script>
+        <script src="/javascripts/jpreLoader.min.js"></script>
+        <script src="http://code.createjs.com/createjs-2013.02.12.min.js"></script>
+        <script type="text/javascript" src="src/tileType.js"></script>
+        <script src="src/tile.js"></script>
+        <script type="text/javascript" src="src/Preloader.js"></script>
+        <script type="text/javascript" src="src/JSONMapLoader.js"></script>
+        <script type="text/javascript" src="src/map.js"></script>
+        <script type="text/javascript" src="src/player.js"></script>
+        <script type="text/javascript" src="assets/gfx.js"></script>
+        <script type="text/javascript" src="assets/core.js"></script>
+        <script type="text/javascript" src="src/Pathfinder.js"></script>
+        <script type="text/javascript" src="src/node.js"></script>
+        <script type="text/javascript" src="src/client.js"></script>
+        <title>SupFarmer - HTML5 - JavaScript - NodeJS </title>
+        <link rel="stylesheet" href="stylesheets/style.css" type="text/css"/>
+        <link rel="stylesheet" href="stylesheets/jpreloader.css" type="text/css"/>
+        <script type="text/javascript">// <![CDATA[
+            $(document).ready(function() {
+                $('body').jpreLoader();
+            });
+// ]]></script>
+    </head>
+    <body>
+        <div id="wrapper">
+            <canvas id="gameview" width="1200" height="600" style="background-color:#688602;">
+                Désolé, votre navigateur ne supporte pas la technologie Canvas.
+            </canvas>
+			
+     <span style="display:none" id="clientid"> waiting to connect...</span>
+           
+                
+	</div>
+        
+        <script>
+
+	// on connection to server, ask for user's name with an anonymous callback
+	socket.on('connect', function(){
+		// call the server-side function 'adduser' and send one parameter (value of prompt)
+		socket.emit('adduser', prompt("What's your name?"));
+	});
+
+	// listener, whenever the server emits 'updatechat', this updates the chat body
+	socket.on('updatechat', function (username, data) {
+		$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+	});
+
+	// listener, whenever the server emits 'updateusers', this updates the username list
+	socket.on('updateusers', function(data) {
+		$('#users').empty();
+		$.each(data, function(key, value) {
+			$('#users').append('<div>' + key + '</div>');
+		});
+	});
+
+	// on load of page
+	$(function(){
+		// when the client clicks SEND
+		$('#datasend').click( function() {
+			var message = $('#data').val();
+			$('#data').val('');
+			// tell server to execute 'sendchat' and send along one parameter
+			socket.emit('sendchat', message);
+		});
+
+		// when the client hits ENTER on their keyboard
+		$('#data').keypress(function(e) {
+			if(e.which === 13) {
+				$(this).blur();
+				$('#datasend').focus().click();
+			}
+		});
+	});
+
+</script>
+<div style="float:left;width:80px;border-right:1px solid;height:120px;padding:10px;overflow:scroll-y;position:absolute;margin-top: -150px; margin-left: 800px;">
+	<b>USERS</b>
+	<div id="users"></div>
+</div>
+<div style="float:left;width:280px;height:120px;overflow:scroll-y;padding:10px;position:absolute;margin-top: -150px;margin-left: 910px;">
+	<div id="conversation"></div>
+	<input id="data" style="width:200px;" />
+	<input type="button" id="datasend" value="send" />
+</div>
+    </body>
+</html>
