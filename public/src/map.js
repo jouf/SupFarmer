@@ -11,6 +11,11 @@ p.offsetX = 700;
 p.offsetY = 0;
 p.player = null;
 
+
+disposeSellPopup = function (tileX,tileY){
+	
+};
+
 p.addTile = function ( $tile, $x, $y, $z ){
     $tile.posX = $x;
     $tile.posY = $y;
@@ -27,23 +32,149 @@ p.addTile = function ( $tile, $x, $y, $z ){
             socket.emit('playerMove', { name : myClientId, posx: this.tile.posX, posy: this.tile.posY } );
         }
         if (this.tile.id === 106){
-            this.tile.map.movePlayer ( this.tile.posX-1, this.tile.posY );
-            this.tile.map.removeTile(this.tile);
+			this.tile.map.movePlayer ( this.tile.posX-1, this.tile.posY );
+			var tileX = this.tile.posX;
+			var tileY = this.tile.posY;
+			if ( this.tile.map.player.waitingList.length === 0 ){
+				var sellPopUp = new createjs.Shape();
+				sellPopUp.graphics.beginFill("#000000").drawRoundRect(450, 190, 350, 250, 30);
+				sellPopUp.alpha = 0.7;
+				stage.addChild(sellPopUp);
+				
+				var stockItTxt = new createjs.Text("Stock it in the silo", "20px Arial", "#ffffff");
+				stockItTxt.x = 500;
+				stockItTxt.y = 250;
+				stage.addChild(stockItTxt);
+				
+				var stockItRefrigeratedTxt = new createjs.Text("Stock it in the refrigerated silo", "20px Arial", "#ffffff");
+				stockItRefrigeratedTxt.x = 500;
+				stockItRefrigeratedTxt.y = 280;
+				stage.addChild(stockItRefrigeratedTxt);
+				
+				var saleItTxt = new createjs.Text("Directly sale it", "20px Arial", "#ffffff");
+				saleItTxt.x = 500;
+				saleItTxt.y = 310;
+				stage.addChild(saleItTxt);
+				createjs.Ticker.removeListener (window[clientid]);
+				
+				saleItTxt.onMouseOver = function (){
+					saleItTxt.color = "#00DD00";
+					stage.update();
+				};
+				saleItTxt.onMouseOut = function (){
+					saleItTxt.color = "#FFFFFF";
+					stage.update();
+				};
+				saleItTxt.onClick = function (){
+					myMap.removeTile(myMap.getTileAt(tileX,tileY,32));
+					createjs.Ticker.addListener (window[clientid]);
+					stage.removeChild(sellPopUp);
+					stage.removeChild(saleItTxt);
+					stage.removeChild(stockItRefrigeratedTxt);
+					stage.removeChild(stockItTxt);
+					socket.emit('updateSalesRessources', { playerName : "Justin" } );
+					socket.on('updateSalesRessources', function(data){
+						window["sarTxt"].text = data.sales_ressource;
+					});
+				};
+			}
         }
         if (this.tile.id === 116){
             this.tile.map.movePlayer ( this.tile.posX-1, this.tile.posY );
-            this.tile.map.removeTile(this.tile);
+			var tileX = this.tile.posX;
+			var tileY = this.tile.posY;
+			if ( this.tile.map.player.waitingList.length === 0 ){
+				var sellPopUp = new createjs.Shape();
+				sellPopUp.graphics.beginFill("#000000").drawRoundRect(450, 190, 350, 250, 30);
+				sellPopUp.alpha = 0.7;
+				stage.addChild(sellPopUp);
+				
+				var stockItTxt = new createjs.Text("Stock it in the silo", "20px Arial", "#ffffff");
+				stockItTxt.x = 500;
+				stockItTxt.y = 250;
+				stage.addChild(stockItTxt);
+				
+				var stockItRefrigeratedTxt = new createjs.Text("Stock it in the refrigerated silo", "20px Arial", "#ffffff");
+				stockItRefrigeratedTxt.x = 500;
+				stockItRefrigeratedTxt.y = 280;
+				stage.addChild(stockItRefrigeratedTxt);
+				
+				var saleItTxt = new createjs.Text("Directly sale it", "20px Arial", "#ffffff");
+				saleItTxt.x = 500;
+				saleItTxt.y = 310;
+				stage.addChild(saleItTxt);
+				createjs.Ticker.removeListener (window[clientid]);
+				
+				saleItTxt.onMouseOver = function (){
+					saleItTxt.color = "#00DD00";
+					stage.update();
+				};
+				saleItTxt.onMouseOut = function (){
+					saleItTxt.color = "#FFFFFF";
+					stage.update();
+				};				
+				saleItTxt.onClick = function (){
+					myMap.removeTile(myMap.getTileAt(tileX,tileY,32));
+					createjs.Ticker.addListener (window[clientid]);
+					stage.removeChild(sellPopUp);
+					stage.removeChild(saleItTxt);
+					stage.removeChild(stockItRefrigeratedTxt);
+					stage.removeChild(stockItTxt);
+					socket.emit('updateSalesRessources', { playerName : "Justin" } );
+				};
+			}
         }
         if (this.tile.id === 126){
             this.tile.map.movePlayer ( this.tile.posX-1, this.tile.posY );
-            this.tile.map.removeTile(this.tile);
+			var tileX = this.tile.posX;
+			var tileY = this.tile.posY;
+			if ( this.tile.map.player.waitingList.length === 0 ){
+				var sellPopUp = new createjs.Shape();
+				sellPopUp.graphics.beginFill("#000000").drawRoundRect(450, 190, 350, 250, 30);
+				sellPopUp.alpha = 0.7;
+				stage.addChild(sellPopUp);
+				
+				var stockItTxt = new createjs.Text("Stock it in the silo", "20px Arial", "#ffffff");
+				stockItTxt.x = 500;
+				stockItTxt.y = 250;
+				stage.addChild(stockItTxt);
+				
+				var stockItRefrigeratedTxt = new createjs.Text("Stock it in the refrigerated silo", "20px Arial", "#ffffff");
+				stockItRefrigeratedTxt.x = 500;
+				stockItRefrigeratedTxt.y = 280;
+				stage.addChild(stockItRefrigeratedTxt);
+				
+				var saleItTxt = new createjs.Text("Directly sale it", "20px Arial", "#ffffff");
+				saleItTxt.x = 500;
+				saleItTxt.y = 310;
+				stage.addChild(saleItTxt);
+				createjs.Ticker.removeListener (window[clientid]);
+				
+				saleItTxt.onMouseOver = function (){
+					saleItTxt.color = "#00DD00";
+					stage.update();
+				};
+				saleItTxt.onMouseOut = function (){
+					saleItTxt.color = "#FFFFFF";
+					stage.update();
+				};
+				saleItTxt.onClick = function (){
+					myMap.removeTile(myMap.getTileAt(tileX,tileY,32));
+					createjs.Ticker.addListener (window[clientid]);
+					stage.removeChild(sellPopUp);
+					stage.removeChild(saleItTxt);
+					stage.removeChild(stockItRefrigeratedTxt);
+					stage.removeChild(stockItTxt);
+					socket.emit('updateSalesRessources', { playerName : "Justin" } );
+				};
+			}
         }
     };
     
     $tile.content.onMouseOver = function (){
         if (this.tile.id === 107){
             this.tile.map.addTile ( new Tile ( TileType.PNG, gfx.tile("106"), true, 0, -58, 106, false ), this.tile.posX, this.tile.posY, 32 );
-            this.tile.map.removeTile(this.tile);
+			this.tile.map.removeTile(this.tile);
         }
         if (this.tile.id === 117){
             this.tile.map.addTile ( new Tile ( TileType.PNG, gfx.tile("116"), true, 0, -58, 116, false ), this.tile.posX, this.tile.posY, 32 );

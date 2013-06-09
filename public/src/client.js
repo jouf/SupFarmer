@@ -1,4 +1,6 @@
-var socket = io.connect('http://10.10.18.35');
+//var socket = io.connect('http://10.10.18.35');
+//var socket = io.connect('http://192.168.0.19');
+var socket = io.connect('http://192.168.1.44');
 var myClientId = null;
 
 // on server connected 
@@ -55,93 +57,41 @@ socket.on('newGame', function(data){
     window[clientid+"Name"] = new createjs.Text(data.player.name, "20px Arial", "#ff7700");
     window[clientid] = new Player ( TileType.DRAW, gfx.player ("pics/farmer.png","stay"));
     
-    var shape = new createjs.Shape();
-    shape.graphics.beginFill("#000000").drawRect(0,0,1200,40);
-    shape.alpha = 0.5;
+    window["lvlTxt"] = new createjs.Text(data.player.level, "16px Arial", "#ffffff");
+    window["lvlTxt"].x = 140;
+    window["lvlTxt"].y = 12;
     
-    var lvlImg = new createjs.Bitmap("pics/sword.png");
-    lvlImg.x = 100;
-    lvlImg.y = 4;
+    window["ferTxt"] = new createjs.Text(data.player.stock_fertilizer, "16px Arial", "#ffffff");
+    window["ferTxt"].x = 580;
+    window["ferTxt"].y = 12;
     
-    var lvlTxt = new createjs.Text(data.player.level, "16px Arial", "#ffffff");
-    lvlTxt.x = 140;
-    lvlTxt.y = 12;
+    window["buiTxt"] = new createjs.Text(data.player.buildings, "16px Arial", "#ffffff");
+    window["buiTxt"].x = 780;
+    window["buiTxt"].y = 12;
     
-    var proImg = new createjs.Bitmap("pics/produit.png");
-    proImg.x = 500;
-    proImg.y = 4;
+	window["typTxt"] = new createjs.Text(data.player.tiles_player, "16px Arial", "#ffffff");
+    window["typTxt"].x = 980;
+    window["typTxt"].y = 12;
     
-    var ferTxt = new createjs.Text(""+data.player.stock_fertilizer, "16px Arial", "#ffffff");
-    ferTxt.x = 580;
-    ferTxt.y = 12;
+    window["firTxt"] = new createjs.Text(data.player.fight_result, "16px Arial", "#ffffff");
+    window["firTxt"].x = 330;
+    window["firTxt"].y = 12;
     
-    var buiImg = new createjs.Bitmap("pics/house.png");
-    buiImg.x = 700;
-    buiImg.y = 4;
+    window["dmgTxt"] = new createjs.Text(data.player.damage, "16px Arial", "#ffffff");
+    window["dmgTxt"].x = 410;
+    window["dmgTxt"].y = 12;
     
-    var buiTxt = new createjs.Text(""+data.player.buildings, "16px Arial", "#ffffff");
-    buiTxt.x = 780;
-    buiTxt.y = 12;
+    window["hpTxt"] = new createjs.Text(data.player.hp, "16px Arial", "#ffffff");
+    window["hpTxt"].x = 220;
+    window["hpTxt"].y = 12;
     
-    var tilImg = new createjs.Bitmap("pics/tile.png");
-    tilImg.x = 900;
-    tilImg.y = 14;
-    
-    var typTxt = new createjs.Text(""+data.player.tiles_player, "16px Arial", "#ffffff");
-    typTxt.x = 980;
-    typTxt.y = 12;
-    
-    var fig2Img = new createjs.Bitmap("pics/sword2.png");
-    fig2Img.x = 280;
-    fig2Img.y = 4;
-    
-    var firTxt = new createjs.Text(""+data.player.fight_result, "16px Arial", "#ffffff");
-    firTxt.x = 330;
-    firTxt.y = 12;
-    
-    var sanImg = new createjs.Bitmap("pics/sang.png");
-    sanImg.x = 360;
-    sanImg.y = 4;
-    
-    var dmgTxt = new createjs.Text(""+data.player.damage, "16px Arial", "#ffffff");
-    dmgTxt.x = 410;
-    dmgTxt.y = 12;
-    
-    var heaImg = new createjs.Bitmap("pics/heart.png");
-    heaImg.x = 180;
-    heaImg.y = 4;
-    
-    var hpTxt = new createjs.Text(""+data.player.hp, "16px Arial", "#ffffff");
-    hpTxt.x = 220;
-    hpTxt.y = 12;
-    
-    var coiImg = new createjs.Bitmap("pics/coin.png");
-    coiImg.x = 1100;
-    coiImg.y = 4;
-    
-    var sarTxt = new createjs.Text(""+data.player.sales_ressources, "16px Arial", "#ffffff");
-    sarTxt.x = 1180;
-    sarTxt.y = 12;
+    window["sarTxt"] = new createjs.Text(data.player.sales_ressources, "16px Arial", "#ffffff");
+    window["sarTxt"].x = 1180;
+    window["sarTxt"].y = 12;
     
     var shishi = new createjs.Shape();
     shishi.graphics.beginFill("#000000").drawRect(800, 450, 600, 400);
-    shishi.alpha = 0.5;
-    
-    var torImg = new createjs.Bitmap("pics/tournesol-button.png");
-    torImg.x = 2;
-    torImg.y = 220;
-    
-    var bleImg = new createjs.Bitmap("pics/ble-button.png");
-    bleImg.x = 2;
-    bleImg.y = 280;
-    
-    var maiImg = new createjs.Bitmap("pics/mais-button.png");
-    maiImg.x = 2;
-    maiImg.y = 340;
-    
-    var sheshe = new createjs.Shape();
-    sheshe.graphics.beginFill("#000000").drawRoundRect(0, 205, 64, 210, 1000);
-    sheshe.alpha = 0.3;
+    shishi.alpha = 0.7;
     
     createjs.Ticker.addListener ( window[clientid], true );
     myMap = new Map ();
@@ -153,36 +103,58 @@ socket.on('newGame', function(data){
     myMap.player = window[clientid];
     stage.addChild(window[clientid+"Name"]);
     stage.enableMouseOver();
-    
-    
-    stage.addChild(shape);
-   
-    stage.addChild(lvlTxt);  
-    stage.addChild(lvlImg);
-    stage.addChild(ferTxt);
-    stage.addChild(proImg);
-    stage.addChild(buiTxt);
-    stage.addChild(buiImg);
-    stage.addChild(typTxt);   
-    stage.addChild(tilImg); 
-    stage.addChild(fig2Img);   
-    stage.addChild(firTxt); 
-    stage.addChild(sanImg); 
-    stage.addChild(dmgTxt); 
-    stage.addChild(hpTxt); 
-    stage.addChild(heaImg);
-    stage.addChild(sarTxt);
-    stage.addChild(coiImg);
-    
+	
+	loadTopBar();
+	loadActionButton();
+	
+    stage.addChild(window["lvlTxt"]);
+    stage.addChild(window["ferTxt"]);
+    stage.addChild(window["buiTxt"]);
+    stage.addChild(window["typTxt"]);  
+    stage.addChild(window["firTxt"]); 
+    stage.addChild(window["dmgTxt"]); 
+    stage.addChild(window["hpTxt"]); 
+    stage.addChild(window["sarTxt"]);
     stage.addChild(shishi);
-    
-    stage.addChild(torImg);
-    stage.addChild(bleImg);
-    stage.addChild(maiImg);
-    
-    stage.addChild(sheshe);
 });
 
+// on connection to server, ask for user's name with an anonymous callback
+	socket.on('connect', function(){
+		// call the server-side function 'adduser' and send one parameter (value of prompt)
+		socket.emit('adduser', prompt("What's your name?"));
+	});
+
+	// listener, whenever the server emits 'updatechat', this updates the chat body
+	socket.on('updatechat', function (username, data) {
+		$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+	});
+
+	// listener, whenever the server emits 'updateusers', this updates the username list
+	socket.on('updateusers', function(data) {
+		$('#users').empty();
+		$.each(data, function(key, value) {
+			$('#users').append('<div>' + key + '</div>');
+		});
+	});
+
+	// on load of page
+	$(function(){
+		// when the client clicks SEND
+		$('#datasend').click( function() {
+			var message = $('#data').val();
+			$('#data').val('');
+			// tell server to execute 'sendchat' and send along one parameter
+			socket.emit('sendchat', message);
+		});
+
+		// when the client hits ENTER on their keyboard
+		$('#data').keypress(function(e) {
+			if(e.which === 13) {
+				$(this).blur();
+				$('#datasend').focus().click();
+			}
+		});
+	});
 
 socket.on('playerOnMap', function(data){
     var clientid = data.clientid;
@@ -191,7 +163,6 @@ socket.on('playerOnMap', function(data){
 socket.on('playerConnected', function(data) {
     var clientid = data.clientid;
     window[clientid+"Name"] = new createjs.Text(clientid, "20px Arial", "#ff7700");
-    
     window[clientid+"Name"].y = 30;
     
     window[clientid] = new Player(TileType.DRAW, gfx.player ("pics/farmer.png","stay"));
@@ -202,12 +173,8 @@ socket.on('playerConnected', function(data) {
 });
 
 socket.on('playerMove', function(data) {
-    //update = true;
-    //window[data.name].smoothMove(data.posx, data.posY);
     window[data.name].posX = data.posx;
     window[data.name].posY = data.posy;
-    
-    //myMap.update();
 });
 
 socket.on('playerDisconnected', function(data) {

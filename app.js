@@ -8,8 +8,6 @@ var io = require("socket.io")
 
 var app = express();
 
-
-
 app.configure(function(){
     app.set('port', process.env.PORT || 9000);
     app.set('views', __dirname + '/views');
@@ -38,49 +36,46 @@ server.listen(app.get('port'), function(){
 var mongoose = require('mongoose');
 
 var layersSchema = new mongoose.Schema({
-        data:[String],
-        name:String,
-        width:Number
-    });
+	data:[String],
+	name:String,
+	width:Number
+});
 
-    var layersModel = mongoose.model('layers', layersSchema);
+var layersModel = mongoose.model('layers', layersSchema);
 
-    var playerSchema = new mongoose.Schema({
-        name:String,
-        password:String,
-        gold:Number,
-        email:String,
-        position_x:Number,
-        position_y:Number,
-        level:Number,
-        stock_fertilizer:Number,
-        info_ressources_global:Number,
-        value_sales_ressources:Number,
-        buildings:Number,
-        tiles_player:Number,
-        fight_result:Number,
-        actions:Number,
-        damage:Number,
-        hp:Number,
-        sales_ressources:Number
-    });
+var playerSchema = new mongoose.Schema({
+	name:String,
+	password:String,
+	gold:Number,
+	email:String,
+	position_x:Number,
+	position_y:Number,
+	level:Number,
+	stock_fertilizer:Number,
+	info_ressources_global:Number,
+	value_sales_ressources:Number,
+	buildings:Number,
+	tiles_player:Number,
+	fight_result:Number,
+	actions:Number,
+	damage:Number,
+	hp:Number,
+	sales_ressources:Number
+});
 
-    // Création du schéma pour la map Mongo
-    var mapSchema = new mongoose.Schema({
-        height:Number,
-        layers:[layersSchema]
-    });
+// Création du schéma pour la map Mongo
+var mapSchema = new mongoose.Schema({
+	height:Number,
+	layers:[layersSchema]
+});
 
-    //creation du model de la map
-    var playerModel = mongoose.model('playerMod', playerSchema);
+//creation du model de la map
+var playerModel = mongoose.model('playerMod', playerSchema);
 
-    var contextSchema = new mongoose.Schema({
-        player:[playerSchema],
-        map:[mapSchema]
-    });
-
-    var contextModel = mongoose.model('context', contextSchema, 'player');
-
+var contextSchema = new mongoose.Schema({
+	player:[playerSchema],
+	map:[mapSchema]
+});
 var clients = new Array();
 var player;
 // usernames which are currently connected to the chat
@@ -89,6 +84,9 @@ var gsocket;
 console.log('Waiting for connection...');
 
 io.sockets.on('connection', function (socket) {
+	var contextModel = mongoose.model('context', contextSchema, 'player');
+
+
     // when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (data) {
 		// we tell the client to execute 'updatechat' with 2 parameters
@@ -119,11 +117,6 @@ io.sockets.on('connection', function (socket) {
 		socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
 	});
     
-    
-    
-    
-    
-    
     gsocket = socket;
     clients.push(socket.id);
     
@@ -151,24 +144,23 @@ io.sockets.on('connection', function (socket) {
             hp: data[0].player[0].hp,
             sales_ressources: data[0].player[0].sales_ressources
         };
+		
         for (var i = 0, l = 1; i < l; i++) {
             map = data[0].map[0];
             var layers = new Array();
             var layersMap = new Array();
             for (k = 0, m = map.layers.length; k < m; k++) {
-                    //console.log(map.layers[k].data);
-                    var data = new Array();
-                    layers = map.layers[k];
+				var data = new Array();
+				layers = map.layers[k];
 
-                    height = map.height;
-                    name = layers.name;
+				height = map.height;
+				name = layers.name;
 
-                    for (var j = 0; j < layers.data.length; j++){
-                            var array = JSON.parse("[" + layers.data[j] + "]");
-                            data[j] = array;
-                    }
-
-                    layersMap[k] = data;
+				for (var j = 0; j < layers.data.length; j++){
+					var array = JSON.parse("[" + layers.data[j] + "]");
+					data[j] = array;
+				}
+				layersMap[k] = data;
             }
         }
         var layers = {
@@ -186,7 +178,8 @@ io.sockets.on('connection', function (socket) {
     console.log('New client connected: ' + socket.id + ' total clients connected: ' + clients.length);
     
     socket.broadcast.emit('playerConnected', { clientid: socket.id });
-  // send data to the newly connected connected client so it can correctly construct the level
+	
+	// send data to the newly connected connected client so it can correctly construct the level
     setTimeout(sendInitialData, 1000);
     
     socket.on('playerOnMap', function(data){
@@ -196,25 +189,44 @@ io.sockets.on('connection', function (socket) {
     socket.on('newGame', function(data){
         gsocket.emit('newGame', { clients: clients, player: player, stringMap: stringMap} );
     });
-    
+	
     socket.on('playerMove', function(data){
         io.sockets.emit('playerMove', data);
     });
 	
+	//update the player Sales Resources by querying mongodb
+	socket.on('updateSalesRessources', function(data){
+		mongoose.connect('mongodb://127.0.0.1/html5game', function(err) {
+			if (err) { throw err; }
+		});
+		contextModel.find({ 'player.name': data.playerName }, function (err, data1) {
+			if (err) { throw err; }
+			var sales_ressource = data1[0].player[0].sales_ressources;
+			
+			contextModel.update({"player.name" : data.playerName },
+			{ $set: { "player.0.sales_ressources" : sales_ressource+1 }}, 
+			function (err) {
+				if (err){ throw err; }
+				console.log('Modif OK !');
+			});
+			sales_ressource = sales_ressource+1;
+			gsocket.emit('updateSalesRessources', { sales_ressource: sales_ressource } );
+			mongoose.connection.close();
+		});
+	});
 	
     socket.on('disconnect', function () {
         // send a disconnected client message to notify all connected clients of a player disconnecting from the game
         io.sockets.emit('playerDisconnected', { clientid: socket.id});
         // remove the disconnected client from our clients array
         for(var i = 0; i < clients.length; i++) {
-          if(clients[i] === socket.id) {
-            clients.splice(i, 1);
-          }
+			if(clients[i] === socket.id) {
+				clients.splice(i, 1);
+			}
         }
         console.log('Client disconnected: ' + socket.id + ' total clients connected: ' + clients.length);
     });
 });
-
 
 function sendInitialData() {
     gsocket.emit('selectPlayer', { } );

@@ -40,7 +40,17 @@ var tiles = {
     124:  function(){return new Tile ( TileType.PNG, gfx.tile("124"), true, 0, -58, 124, false );},
     125:  function(){return new Tile ( TileType.PNG, gfx.tile("125"), true, 0, -58, 125, false );},
     126:  function(){return new Tile ( TileType.PNG, gfx.tile("126"), true, 0, -58, 126, false );},
-    127:  function(){return new Tile ( TileType.PNG, gfx.tile("127"), true, 0, -58, 127, true );}
+    127:  function(){return new Tile ( TileType.PNG, gfx.tile("127"), true, 0, -58, 127, true );},
+
+    //SILO
+    128:  function(){return new Tile ( TileType.PNG, gfx.tile("128"), true, 0, -100, 128, false );},
+
+    //GRANGE
+    129:  function(){return new Tile ( TileType.PNG, gfx.tile("129"), true, 0, -100, 129, false );},
+
+    //FRIGO
+    130:  function(){return new Tile ( TileType.PNG, gfx.tile("130"), true, 0, -100, 130, false );}
+
 };
 
 

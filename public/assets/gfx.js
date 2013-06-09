@@ -15,6 +15,24 @@ var tileSetPlante = new createjs.SpriteSheet({
         }
 });
 
+var silo = new createjs.SpriteSheet({
+        images: ['pics/silo-1.png'],
+        frames: {width: 64, height: 163}
+});
+
+var grange = new createjs.SpriteSheet({
+        images: ['pics/silo-grange-1.png'],
+        frames: {width: 175, height: 205}
+});
+
+var frigo = new createjs.SpriteSheet({
+        images: ['pics/frigo-sprite.png'],
+        frames: {width: 175, height: 205},
+        animations: { 
+                smoke: [1, 4, "smoke", 6]
+        }
+});
+
 gfx.tile = function (path){	
     var images = {
         '1': this.gfx = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(tileSet, 0)),
@@ -60,10 +78,14 @@ gfx.tile = function (path){
         '125' : this.gfx = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(tileSetPlante, 24)),
 
         // ble bleu recoltable
-        '126' : this.gfx = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(tileSetPlante, 25))
-    };
+        '126' : this.gfx = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(tileSetPlante, 25)),
 
-    this.gfx = new createjs.BitmapAnimation(tileSetPlante);
+        //SILO
+        '128' : this.gfx = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(silo, 0)),
+
+        //GRANGE
+        '129' : this.gfx = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(grange, 0))
+    };
 
     if (path === "1"){ this.gfx = images['1']; }
     if (path === "2"){ this.gfx = images['2']; }
@@ -85,21 +107,43 @@ gfx.tile = function (path){
     if (path === "104"){ this.gfx = images['104']; }
     if (path === "105"){ this.gfx = images['105']; }
     if (path === "106"){ this.gfx = images['106']; }
-    if (path === "107"){ this.gfx.gotoAndPlay("tounesolAnim"); }
+    if (path === "107"){ 
+		this.gfx = new createjs.BitmapAnimation(tileSetPlante);
+		this.gfx.gotoAndPlay("tounesolAnim"); 
+	}
     if (path === "111"){ this.gfx = images['111']; }
     if (path === "112"){ this.gfx = images['112']; }
     if (path === "113"){ this.gfx = images['113']; }
     if (path === "114"){ this.gfx = images['114']; }
     if (path === "115"){ this.gfx = images['115']; }
     if (path === "116"){ this.gfx = images['116']; }
-    if (path === "117"){ this.gfx.gotoAndPlay("maisAnim"); }
+    if (path === "117"){ 
+		this.gfx = new createjs.BitmapAnimation(tileSetPlante);
+		this.gfx.gotoAndPlay("maisAnim"); 
+	}
     if (path === "121"){ this.gfx = images['121']; }
     if (path === "122"){ this.gfx = images['122']; }
     if (path === "123"){ this.gfx = images['123']; }
     if (path === "124"){ this.gfx = images['124']; }
     if (path === "125"){ this.gfx = images['125']; }
     if (path === "126"){ this.gfx = images['126']; }
-    if (path === "127"){ this.gfx.gotoAndPlay("bleAnim"); }
+    if (path === "127"){ 
+		this.gfx = new createjs.BitmapAnimation(tileSetPlante);
+		this.gfx.gotoAndPlay("bleAnim"); 
+	}
+
+    // SILO
+    if (path === "128"){ this.gfx = images['128']; }
+
+    // GRANGE
+    if (path === "129"){ this.gfx = images['129']; }
+
+    
+    // FRIGO
+    if (path === "130"){ 
+		this.gfx = new createjs.BitmapAnimation(frigo);
+		this.gfx.gotoAndPlay("smoke");
+	}
 
     return this.gfx;
 };

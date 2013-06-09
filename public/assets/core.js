@@ -10,7 +10,6 @@ var curentAnimation;
 var oldPlayerX = 0;
 var oldPlayerY = 0;
 
-
 function stay (){
     oldPlayerX = window[clientid].posX;
     oldPlayerY = window[clientid].posY;
@@ -48,11 +47,7 @@ function turnDown (){
     createjs.Ticker.addListener ( window[clientid], true );
 }
 
-function init()
-{
-    /**
-    * Initialisation.
-    */
+function init(){
     canvas = document.getElementById('gameview');
     stage = new createjs.Stage(canvas);
     stage.enableMouseOver();
@@ -75,17 +70,9 @@ function mouseCheck(e){
     xmouse = Math.round(xmouse/32);
 
     to_tile = myMap.getTileAt ( xmouse, ymouse-1, 32 );
-    
-    /*if (to_tile.id === 115){
-        myMap.removeTile(to_tile);
-        myMap.addTile ( new Tile ( TileType.PNG, gfx.tile("116"), true, 0, -58, 116, false ), xmouse, ymouse-1, 32 );
-    }*/
 }
 
-function pressHandler(){
-    //alert(to_tile.id);
-     //myMap.removeTile(to_tile);
-}
+function pressHandler(){}
 
 function tick(){ 
     if(update){

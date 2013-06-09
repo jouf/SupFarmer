@@ -1,183 +1,198 @@
-// Enums
-			var Keys = {
-				UP: 38,
-				DOWN: 40,
-				LEFT: 37,
-				RIGHT: 39,
-				W: 87,
-				A: 65,
-				S: 83,
-				D: 68,
-				Z: 90,
-				X: 88,
-				R: 82
-			}
+var stylesheetbouttongreen = new createjs.SpriteSheet({
+        images: ['pics/stylesheetbouttongreen.png'],
+        frames: {width: 60, height: 60}
+    });
 
-			var Tools = {
-				current: 4, // Default tool
-				/* - */
-				MOVE: 0,
-				ZOOM_IN: 1,
-				ZOOM_OUT: 2,
-				DEMOLISH: 3,
-				SELECT: 4,
-				BUILD: 5
-			}
-			
-			document.handleMouseDown = function(e) {
-	var x, y;
+function loadActionButton(){
+	//4 bouttons actions
+    var shape2 = new createjs.Shape();
+    shape2.graphics.beginFill("#000000").drawRect(0, 455, 140, 400);
+    shape2.alpha = 0.7;
+    stage.addChild(shape2);
 
-	e.preventDefault();
-alert('ok');
-		switch (Tools.current) {
-		case Tools.BUILD:
-            
-			break;
-		case Tools.MOVE:
-			this.dragHelper.active = true;
-			this.dragHelper.x = x;
-			this.dragHelper.y = y;
-			break;
-		case Tools.ZOOM_IN:
-			this.zoomIn();
-			break;
-		case Tools.ZOOM_OUT:
-			this.zoomOut();
-			break;
-		case Tools.DEMOLISH:
-			
-			var pos = this.translatePixelsToMatrix(x, y);
+    var engImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 6));
+    engImg.y = 465;
+    engImg.x = 5; 
+    stage.addChild(engImg);
 
-			if (this.tileMap[pos.row] != undefined && this.tileMap[pos.row][pos.col] != undefined) {
-				this.tileMap[pos.row][pos.col] = null;
-			}
+    var eng2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 7));
+    eng2Img.y = 465;
+    eng2Img.x = 5; 
+    stage.addChild(eng2Img);
 
-			break;
-	}
+    var semImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 8));
+    semImg.y = 465;
+    semImg.x = 70; 
+    stage.addChild(semImg);
+
+    var sem2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 9));
+    sem2Img.y = 465;
+    sem2Img.x = 70; 
+    stage.addChild(sem2Img);
+
+    var recImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 10));
+    recImg.y = 530;
+    recImg.x = 70; 
+    stage.addChild(recImg);
+
+    var rec2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 11));
+    rec2Img.y = 530;
+    rec2Img.x = 70; 
+    stage.addChild(rec2Img);
+
+    var attImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 12));
+    attImg.y = 530;
+    attImg.x = 5; 
+    stage.addChild(attImg);
+
+    var att2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 13));
+    att2Img.y = 530;
+    att2Img.x = 5; 
+    stage.addChild(att2Img);
+}
+
+function loadButtonWood(){
+// Button for GRAINES BLE TOURNESOL MAIS
+    var shape3 = new createjs.Shape();
+    shape3.graphics.beginFill("#000000").drawRoundRect(5, 135, 70, 210, 1000);
+    shape3.alpha = 0.8;
+
+    stage.addChild(shape3);
+
+    var bleImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 0));
+    bleImg.y = 150;
+    bleImg.x = 10; 
+    stage.addChild(bleImg);
+
+    var ble2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 1));
+    ble2Img.y = 150;
+    ble2Img.x = 10; 
+    stage.addChild(ble2Img);
+
+    var torImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 2));
+    torImg.y = 210;
+    torImg.x = 10; 
+    stage.addChild(torImg);
+
+    var tor2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 3));
+    tor2Img.y = 210;
+    tor2Img.x = 10; 
+    stage.addChild(tor2Img);
+
+    var maiImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 4));
+    maiImg.y = 270;
+    maiImg.x = 10; 
+    stage.addChild(maiImg);
+
+    var mai2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 5));
+    mai2Img.y = 270;
+    mai2Img.x = 10; 
+    stage.addChild(mai2Img);
+
+}
+
+function loadWeaponButton(){
+	// Button for WEAPONS FOURCHE BATTE TRONCONNEUSE AK-47
+    var shape4 = new createjs.Shape();
+    shape4.graphics.beginFill("#000000").drawRoundRect(5, 135, 70, 270, 1000);
+    shape4.alpha = 0.8;
+
+    stage.addChild(shape4);
+
+    var kalImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 14));
+    kalImg.y = 150;
+    kalImg.x = 10; 
+    stage.addChild(kalImg);
+
+    var kal2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 15));
+    kal2Img.y = 150;
+    kal2Img.x = 10; 
+    stage.addChild(kal2Img);
+
+    var batImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 16));
+    batImg.y = 210;
+    batImg.x = 10; 
+    stage.addChild(batImg);
+
+    var bat2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 17));
+    bat2Img.y = 210;
+    bat2Img.x = 10; 
+    stage.addChild(bat2Img);
+
+    var troImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 18));
+    troImg.y = 270;
+    troImg.x = 10; 
+    stage.addChild(troImg);
+
+    var tro2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 19));
+    tro2Img.y = 270;
+    tro2Img.x = 10; 
+    stage.addChild(tro2Img);
+
+    var fouImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 20));
+    fouImg.y = 330;
+    fouImg.x = 10; 
+    stage.addChild(fouImg);
+
+    var fou2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 21));
+    fou2Img.y = 330;
+    fou2Img.x = 10; 
+    stage.addChild(fou2Img); 
+}
+
+function loadTopBar(){
+	// function shape top bar
+	var shape = new createjs.Shape();
+    shape.graphics.beginFill("#000000").drawRect(0,0,1200,40);
+    shape.alpha = 0.7;
     
-    //this.draw();
+    var lvlImg = new createjs.Bitmap("pics/sword.png");
+    lvlImg.x = 100;
+    lvlImg.y = 4;
+    
+    var proImg = new createjs.Bitmap("pics/produit.png");
+    proImg.x = 500;
+    proImg.y = 4;
+    
+    var buiImg = new createjs.Bitmap("pics/house.png");
+    buiImg.x = 700;
+    buiImg.y = 4;
+
+    var tilImg = new createjs.Bitmap("pics/tile.png");
+    tilImg.x = 900;
+    tilImg.y = 14;
+    
+    var fig2Img = new createjs.Bitmap("pics/sword2.png");
+    fig2Img.x = 280;
+    fig2Img.y = 4;
+    
+    var sanImg = new createjs.Bitmap("pics/sang.png");
+    sanImg.x = 360;
+    sanImg.y = 4;
+
+    var heaImg = new createjs.Bitmap("pics/heart.png");
+    heaImg.x = 180;
+    heaImg.y = 4;
+    
+    var coiImg = new createjs.Bitmap("pics/coin.png");
+    coiImg.x = 1100;
+    coiImg.y = 4;
+    
+    stage.addChild(shape);
+
+    stage.addChild(lvlImg);
+    stage.addChild(proImg); 
+    stage.addChild(buiImg);  
+    stage.addChild(tilImg); 
+    stage.addChild(fig2Img);     
+    stage.addChild(sanImg); 
+    stage.addChild(heaImg);
+    stage.addChild(coiImg);
 }
 
 
-function loadGUI () {
 
-				// Initialize the game object
 
-				var pointer = {
-					DOWN: 'mousedown',
-					UP: 'mouseup',
-					MOVE: 'mousemove'
-				};
-				
-// Listen for GUI events
-				var ui = document.getElementById('ui');
-				ui.addEventListener(pointer.UP, function(e) {
-					switch(e.target.getAttribute('id')) {
-						case 'panel-toggle':
-							var panelContainer = document.getElementById('panel-container');
-							var classes = panelContainer.getAttribute('class');
-							var alphaTarget;
- 	
-							if (classes != null && classes.length > 0) {
-								panelContainer.setAttribute('class', '');
-								document.getElementById('panel-toggle').innerHTML = 'Cancel';
-								alphaTarget=.4;
-								createjs.Tween.get(myMap).to({alpha:alphaTarget},1000,createjs.Ease.bounceIn);
-							} else {
-								panelContainer.setAttribute('class', 'hidden');
-								document.getElementById('panel-toggle').innerHTML = 'Panel';
-								alphaTarget=1;
-								createjs.Tween.get(myMap).to({alpha:alphaTarget},1000,createjs.Ease.bounceIn);
-							}
-							break;
-						case 'select':
-							selectTool(Tools.SELECT, document.getElementById('select'));
-							isDrag = false;
-							createjs.Ticker.addListener ( window[clientid] );
-							canvas.onmousemove = null;
-                                                        myMap.onPress = null;
-                                                        
-							break;
-						case 'move':
-							selectTool(Tools.MOVE, document.getElementById('move'));
-							ui.addEventListener(pointer.DOWN, function(e) {
-								createjs.Ticker.removeListener ( player );
-    							canvas.onmousemove = mouseCheck;
-							});
-							break;
-						case 'zoomIn':
-							selectTool(Tools.ZOOM_IN, document.getElementById('zoomIn'));
-							isDrag = false;
-							break;
-						case 'zoomOut':
-							selectTool(Tools.ZOOM_OUT, document.getElementById('zoomOut'));
-							isDrag = false;
-							break;
-						case 'demolish':
-							selectTool(Tools.DEMOLISH, document.getElementById('demolish'));
-							isDrag = false;
-							break;
-						default:
-							// He didn't click on any option and actually click on an empty section of the UI, fallback to the canvas.
-							e.srcElement = canvas;
-							e.target = canvas;
-							e.toElement = canvas;
-							isDrag = false;
-							switch (Tools.current) {
-		case Tools.BUILD:
-			break;
-		case Tools.MOVE:
-			this.dragHelper.active = true;
-			this.dragHelper.x = x;
-			this.dragHelper.y = y;
-			break;
-		case Tools.ZOOM_IN:
-			break;
-		case Tools.ZOOM_OUT:
-			break;
-		case Tools.DEMOLISH:
-			
-			var pos = this.translatePixelsToMatrix(x, y);
 
-			if (this.tileMap[pos.row] != undefined && this.tileMap[pos.row][pos.col] != undefined) {
-				this.tileMap[pos.row][pos.col] = null;
-			}
 
-			break;
-	}
 
-							break;
-					}
-				}, false);
-			}
-
-			function selectTool(tool, elem) {
-
-				// Remove the "active" class from any element inside the div#tools ul
-				for (var i = 0, x = elem.parentNode.childNodes.length; i < x; i++) {
-					if (elem.parentNode.childNodes[i].tagName == "LI") {
-						elem.parentNode.childNodes[i].className = null;
-					}
-				}
-
-				elem.className += "active";
-
-				switch(tool) {
-					case Tools.SELECT:
-						Tools.current = Tools.SELECT;
-						break;
-					case Tools.MOVE:
-						Tools.current = Tools.MOVE;
-						break;
-					case Tools.ZOOM_IN:
-						Tools.current = Tools.ZOOM_IN;
-						break;
-					case Tools.ZOOM_OUT:
-						Tools.current = Tools.ZOOM_OUT;
-						break;
-					case Tools.DEMOLISH:
-						Tools.current = Tools.DEMOLISH;
-						break;
-				}
-
-			}
