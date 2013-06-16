@@ -81,20 +81,20 @@ var player;
 // usernames which are currently connected to the chat
 var usernames = {};
 var gsocket;
+var contextModel = mongoose.model('context', contextSchema, 'player');
 console.log('Waiting for connection...');
 
 io.sockets.on('connection', function (socket) {
-	var contextModel = mongoose.model('context', contextSchema, 'player');
-
 
     // when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (data) {
 		// we tell the client to execute 'updatechat' with 2 parameters
 		io.sockets.emit('updatechat', socket.username, data);
 	});
-
+	gsocket = socket;
 	// when the client emits 'adduser', this listens and executes
 	socket.on('adduser', function(username){
+		
 		// we store the username in the socket session for this client
 		socket.username = username;
 		// add the client's username to the global list
@@ -105,93 +105,90 @@ io.sockets.on('connection', function (socket) {
 		socket.broadcast.emit('updatechat', 'SERVER', username + ' has connected');
 		// update the list of users in chat, client-side
 		io.sockets.emit('updateusers', usernames);
-	});
-
-	// when the user disconnects.. perform this
-	socket.on('disconnect', function(){
-		// remove the username from global usernames list
-		delete usernames[socket.username];
-		// update list of users in chat, client-side
-		io.sockets.emit('updateusers', usernames);
-		// echo globally that this client has left
-		socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
-	});
-    
-    gsocket = socket;
-    clients.push(socket.id);
-    
-    mongoose.connect('mongodb://127.0.0.1/html5game', function(err) {
-        if (err) { throw err; }
-    });
-
-    contextModel.find({ 'player.name':"Justin" }, function (err, data) {
-        if (err) { throw err; }
-        var map;
-        var height;
-        var name;
-        player = {
-            x : data[0].player[0].position_x,
-            y : data[0].player[0].position_y, 
-            name: data[0].player[0].name,
-            level: data[0].player[0].level,
-            stock_fertilizer: data[0].player[0].stock_fertilizer,
-            info_ressources_global: data[0].player[0].info_ressources_global,
-            value_sales_ressources: data[0].player[0].value_sales_ressources,
-            buildings: data[0].player[0].buildings,
-            tiles_player: data[0].player[0].tiles_player,
-            fight_result: data[0].player[0].fight_result,
-            damage: data[0].player[0].damage,
-            hp: data[0].player[0].hp,
-            sales_ressources: data[0].player[0].sales_ressources
-        };
 		
-        for (var i = 0, l = 1; i < l; i++) {
-            map = data[0].map[0];
-            var layers = new Array();
-            var layersMap = new Array();
-            for (k = 0, m = map.layers.length; k < m; k++) {
-				var data = new Array();
-				layers = map.layers[k];
-
-				height = map.height;
-				name = layers.name;
-
-				for (var j = 0; j < layers.data.length; j++){
-					var array = JSON.parse("[" + layers.data[j] + "]");
-					data[j] = array;
-				}
-				layersMap[k] = data;
-            }
-        }
-        var layers = {
-            data : layersMap[0],
-            data1 : layersMap[1],
-            name : name
-        };
-        stringMap = {
-            height : height,
-            layers : [layers]
-        };
-        mongoose.connection.close();
-    });
-    
-    console.log('New client connected: ' + socket.id + ' total clients connected: ' + clients.length);
-    
-    socket.broadcast.emit('playerConnected', { clientid: socket.id });
+		
+		io.sockets.emit('playerConnected', { clientid: socket.id });
+	});
 	
-	// send data to the newly connected connected client so it can correctly construct the level
-    setTimeout(sendInitialData, 1000);
-    
     socket.on('playerOnMap', function(data){
         io.sockets.emit('playerOnMap', data);
     });
-    
+	
+	
+	// send data to the newly connected connected client so it can correctly construct the level
+    setTimeout(sendInitialData, 1000);
+	
     socket.on('newGame', function(data){
+		clients.push(socket.id);
+		console.log('New client connected: '+ socket.username +' : ' + socket.id + ' total clients connected: ' + clients.length);
+	
+		mongoose.connect('mongodb://127.0.0.1/html5game', function(err) {
+			if (err) { throw err; }
+		});
+		
+		contextModel.find({ 'player.name':data.playerName }, function (err, data) {
+			if (err) { throw err; }
+			var map;
+			var height;
+			var name;
+			player = {
+				x : data[0].player[0].position_x,
+				y : data[0].player[0].position_y, 
+				name: data[0].player[0].name,
+				//name: socket.username,
+				level: data[0].player[0].level,
+				stock_fertilizer: data[0].player[0].stock_fertilizer,
+				info_ressources_global: data[0].player[0].info_ressources_global,
+				value_sales_ressources: data[0].player[0].value_sales_ressources,
+				buildings: data[0].player[0].buildings,
+				tiles_player: data[0].player[0].tiles_player,
+				fight_result: data[0].player[0].fight_result,
+				damage: data[0].player[0].damage,
+				hp: data[0].player[0].hp,
+				sales_ressources: data[0].player[0].sales_ressources
+			};
+			
+			for (var i = 0, l = 1; i < l; i++) {
+				map = data[0].map[0];
+				var layers = new Array();
+				var layersMap = new Array();
+				for (k = 0, m = map.layers.length; k < m; k++) {
+					var data = new Array();
+					layers = map.layers[k];
+					//console.log (layers);
+					height = map.height;
+					name = layers.name;
+
+					for (var j = 0; j < layers.data.length; j++){
+						//console.log (layers.data[j]);
+						var array = JSON.parse( "[" +layers.data[j]+ "]" );
+						data[j] = array;
+					}
+					layersMap[k] = data;
+				}
+			}
+			var layers = {
+				data : layersMap[0],
+				data1 : layersMap[1],
+				name : name
+			};
+			stringMap = {
+				height : height,
+				layers : [layers]
+			};
+			mongoose.connection.close();
+		});
         gsocket.emit('newGame', { clients: clients, player: player, stringMap: stringMap} );
     });
 	
     socket.on('playerMove', function(data){
-        io.sockets.emit('playerMove', data);
+		var name = socket.id;
+		
+		console.log(name);
+		
+		var posX = data.posx;
+		var posY = data.posy;
+        io.sockets.emit('movePlayer', { name: name, posx: posX, posy: posY });
     });
 	
 	//update the player Sales Resources by querying mongodb
@@ -224,7 +221,13 @@ io.sockets.on('connection', function (socket) {
 				clients.splice(i, 1);
 			}
         }
-        console.log('Client disconnected: ' + socket.id + ' total clients connected: ' + clients.length);
+		// remove the username from global usernames list
+		delete usernames[socket.username];
+		// update list of users in chat, client-side
+		io.sockets.emit('updateusers', usernames);
+		// echo globally that this client has left
+		socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
+        console.log('Client disconnected: ' + socket.username +" : "+ socket.id + ' total clients connected: ' + clients.length);
     });
 });
 

@@ -17,8 +17,7 @@ function loadActionButton(){
 
     var eng2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 7));
     eng2Img.y = 465;
-    eng2Img.x = 5; 
-    stage.addChild(eng2Img);
+    eng2Img.x = 5;
 
     var semImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 8));
     semImg.y = 465;
@@ -27,8 +26,7 @@ function loadActionButton(){
 
     var sem2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 9));
     sem2Img.y = 465;
-    sem2Img.x = 70; 
-    stage.addChild(sem2Img);
+    sem2Img.x = 70;
 
     var recImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 10));
     recImg.y = 530;
@@ -37,107 +35,340 @@ function loadActionButton(){
 
     var rec2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 11));
     rec2Img.y = 530;
-    rec2Img.x = 70; 
-    stage.addChild(rec2Img);
+    rec2Img.x = 70;
 
-    var attImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 12));
-    attImg.y = 530;
-    attImg.x = 5; 
-    stage.addChild(attImg);
+    window["attImg"] = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 12));
+    window["attImg"].y = 530;
+    window["attImg"].x = 5; 
+    stage.addChild(window["attImg"]);
 
     var att2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 13));
     att2Img.y = 530;
-    att2Img.x = 5; 
-    stage.addChild(att2Img);
+    att2Img.x = 5;
+	
+	
+	window["clickSound"] = createjs.Sound.play("sound/click.mp3", "click");
+	
+	// Fertilizer Action
+	engImg.onMouseOver = function (){
+		window["clickSound"].play("click");
+		stage.removeChild(engImg);
+		stage.addChild(eng2Img);
+		stage.update();
+		
+		eng2Img.onMouseOut = function (){
+			stage.removeChild(eng2Img);
+			stage.addChild(engImg);
+			stage.update();
+		};
+		
+		eng2Img.onClick = function (){
+			if ( recolt === true ){
+				recolt = false;
+			}
+			if ( attackAction === true ){
+				attackAction = false;
+				document.documentElement.style.cursor = 'url("pics/cursor-fertilizan.png"), auto';
+				removeWeaponButton();
+			}
+			if ( plantAction === true ){
+				removeButtonWood();
+				document.documentElement.style.cursor = 'url("pics/cursor.png"), auto';
+				plantAction = false;
+			}
+			if ( seedAction === false ){
+				seedAction = true;
+			} else {
+				seedAction = false;
+			}
+		};
+	};
+	
+	
+	//attack Button
+	window["attImg"].onMouseOver = function (){
+		window["clickSound"].play("click");
+		stage.removeChild(window["attImg"]);
+		stage.addChild(att2Img);
+		stage.update();
+		
+		att2Img.onMouseOut = function (){
+			stage.removeChild(att2Img);
+			stage.addChild(window["attImg"]);
+			stage.update();
+		};
+		
+		att2Img.onClick = function (){
+			if ( recolt === true ){
+				recolt = false;
+			}
+			if ( attackAction === false ){
+				attackAction = true;
+				loadWeaponButton();
+				document.documentElement.style.cursor = 'url("pics/cursor-sword.png"), auto';
+			} else {
+				attackAction = false;
+				removeWeaponButton();
+				document.documentElement.style.cursor = 'url("pics/cursor.png"), auto';
+			}
+			if ( seedAction === true ){
+				seedAction = false;
+			}
+			if ( plantAction === true ){
+				plantAction = true;
+				removeButtonWood();
+			}
+		};
+	};
+	
+	//seeds Button
+	semImg.onMouseOver = function (){
+		window["clickSound"].play("click");
+		stage.removeChild(semImg);
+		stage.addChild(sem2Img);
+		stage.update();
+		
+		sem2Img.onMouseOut = function (){
+			stage.removeChild(sem2Img);
+			stage.addChild(semImg);
+			stage.update();
+		};
+		
+		sem2Img.onClick = function (){
+			if ( recolt === true ){
+				recolt = false;
+			}
+			if ( attackAction === true ){
+				attackAction = false;
+				removeWeaponButton();
+			}
+			if ( seedAction === true ){
+				seedAction = false;
+			}
+			if ( plantAction === false ){
+				plantAction = true;
+				loadButtonWood();
+				document.documentElement.style.cursor = 'url("pics/cursor-semis.png"), auto';
+			} else {
+				plantAction = false;
+				removeButtonWood();
+				document.documentElement.style.cursor = 'url("pics/cursor.png"), auto';
+			}
+		};
+	};
+	
+	recImg.onMouseOver = function (){
+		window["clickSound"].play("click");
+		stage.removeChild(recImg);
+		stage.addChild(rec2Img);
+		stage.update();
+		
+		rec2Img.onMouseOut = function (){
+			stage.removeChild(rec2Img);
+			stage.addChild(recImg);
+			stage.update();
+		};
+		
+		rec2Img.onClick = function (){
+			recolt = true;
+			document.documentElement.style.cursor = 'url("pics/cursor-faux.png"), auto';
+			stage.update();
+		};
+	};
 }
 
 function loadButtonWood(){
 // Button for GRAINES BLE TOURNESOL MAIS
-    var shape3 = new createjs.Shape();
-    shape3.graphics.beginFill("#000000").drawRoundRect(5, 135, 70, 210, 1000);
-    shape3.alpha = 0.8;
+    window["shape3"] = new createjs.Shape();
+    window["shape3"].graphics.beginFill("#000000").drawRoundRect(5, 135, 70, 210, 1000);
+    window["shape3"].alpha = 0.8;
+    stage.addChild(window["shape3"]);
 
-    stage.addChild(shape3);
+    window["bleImg"] = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 0));
+    window["bleImg"].y = 150;
+    window["bleImg"].x = 10; 
+    stage.addChild(window["bleImg"]);
 
-    var bleImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 0));
-    bleImg.y = 150;
-    bleImg.x = 10; 
-    stage.addChild(bleImg);
-
-    var ble2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 1));
-    ble2Img.y = 150;
-    ble2Img.x = 10; 
-    stage.addChild(ble2Img);
-
-    var torImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 2));
-    torImg.y = 210;
-    torImg.x = 10; 
-    stage.addChild(torImg);
-
-    var tor2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 3));
-    tor2Img.y = 210;
-    tor2Img.x = 10; 
-    stage.addChild(tor2Img);
-
-    var maiImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 4));
-    maiImg.y = 270;
-    maiImg.x = 10; 
-    stage.addChild(maiImg);
-
-    var mai2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 5));
-    mai2Img.y = 270;
-    mai2Img.x = 10; 
-    stage.addChild(mai2Img);
-
+	window["ble2Img"] = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 1));
+    window["ble2Img"].y = 150;
+    window["ble2Img"].x = 10;
+	
+    window["torImg"] = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 2));
+    window["torImg"].y = 210;
+    window["torImg"].x = 10; 
+    stage.addChild(window["torImg"]);
+	
+	window["tor2Img"] = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 3));
+    window["tor2Img"].y = 210;
+    window["tor2Img"].x = 10;
+	
+    window["maiImg"] = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 4));
+    window["maiImg"].y = 270;
+    window["maiImg"].x = 10; 
+    stage.addChild(window["maiImg"]);
+	
+	window["mai2Img"] = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 5));
+    window["mai2Img"].y = 270;
+    window["mai2Img"].x = 10; 
+	
+	window["bleImg"].onMouseOver = function (){
+		window["clickSound"].play("click");
+		stage.removeChild(window["bleImg"]);
+		stage.addChild(window["ble2Img"]);
+		stage.update();
+		
+		window["ble2Img"].onMouseOut = function (){
+			stage.removeChild(window["ble2Img"]);
+			stage.addChild(window["bleImg"]);
+			stage.update();
+		};
+	};
+	
+	window["torImg"].onMouseOver = function (){
+		window["clickSound"].play("click");
+		stage.removeChild(window["torImg"]);
+		stage.addChild(window["tor2Img"]);
+		stage.update();
+		
+		window["tor2Img"].onMouseOut = function (){
+			stage.removeChild(window["tor2Img"]);
+			stage.addChild(window["torImg"]);
+			stage.update();
+		};
+	};
+	
+	window["maiImg"].onMouseOver = function (){
+		window["clickSound"].play("click");
+		stage.removeChild(window["maiImg"]);
+		stage.addChild(window["mai2Img"]);
+		stage.update();
+		
+		window["mai2Img"].onMouseOut = function (){
+			stage.removeChild(window["mai2Img"]);
+			stage.addChild(window["maiImg"]);
+			stage.update();
+		};
+	};
 }
+
+function removeButtonWood(){
+    stage.removeChild(window["shape3"]);
+    stage.removeChild(window["torImg"]);
+    stage.removeChild(window["maiImg"]);
+	stage.removeChild(window["bleImg"]);
+	stage.removeChild(window["tor2Img"]);
+    stage.removeChild(window["mai2Img"]);
+	stage.removeChild(window["ble2Img"]);
+}
+
 
 function loadWeaponButton(){
 	// Button for WEAPONS FOURCHE BATTE TRONCONNEUSE AK-47
-    var shape4 = new createjs.Shape();
-    shape4.graphics.beginFill("#000000").drawRoundRect(5, 135, 70, 270, 1000);
-    shape4.alpha = 0.8;
+    window["shape4"] = new createjs.Shape();
+    window["shape4"].graphics.beginFill("#000000").drawRoundRect(5, 135, 70, 270, 1000);
+    window["shape4"].alpha = 0.8;
 
-    stage.addChild(shape4);
+    stage.addChild(window["shape4"]);
 
-    var kalImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 14));
-    kalImg.y = 150;
-    kalImg.x = 10; 
-    stage.addChild(kalImg);
+    window["kalImg"] = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 14));
+    window["kalImg"].y = 150;
+    window["kalImg"].x = 10; 
+    stage.addChild(window["kalImg"]);
 
-    var kal2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 15));
-    kal2Img.y = 150;
-    kal2Img.x = 10; 
-    stage.addChild(kal2Img);
+    window["kal2Img"] = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 15));
+    window["kal2Img"].y = 150;
+    window["kal2Img"].x = 10;
 
-    var batImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 16));
-    batImg.y = 210;
-    batImg.x = 10; 
-    stage.addChild(batImg);
+    window["batImg"] = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 16));
+    window["batImg"].y = 210;
+    window["batImg"].x = 10; 
+    stage.addChild(window["batImg"]);
 
-    var bat2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 17));
-    bat2Img.y = 210;
-    bat2Img.x = 10; 
-    stage.addChild(bat2Img);
+    window["bat2Img"] = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 17));
+    window["bat2Img"].y = 210;
+    window["bat2Img"].x = 10;
 
-    var troImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 18));
-    troImg.y = 270;
-    troImg.x = 10; 
-    stage.addChild(troImg);
+    window["troImg"] = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 18));
+    window["troImg"].y = 270;
+    window["troImg"].x = 10; 
+    stage.addChild(window["troImg"]);
 
-    var tro2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 19));
-    tro2Img.y = 270;
-    tro2Img.x = 10; 
-    stage.addChild(tro2Img);
+    window["tro2Img"] = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 19));
+    window["tro2Img"].y = 270;
+    window["tro2Img"].x = 10;
 
-    var fouImg = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 20));
-    fouImg.y = 330;
-    fouImg.x = 10; 
-    stage.addChild(fouImg);
+    window["fouImg"] = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 20));
+    window["fouImg"].y = 330;
+    window["fouImg"].x = 10; 
+    stage.addChild(window["fouImg"]);
 
-    var fou2Img = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 21));
-    fou2Img.y = 330;
-    fou2Img.x = 10; 
-    stage.addChild(fou2Img); 
+    window["fou2Img"] = new createjs.Bitmap(createjs.SpriteSheetUtils.extractFrame(stylesheetbouttongreen, 21));
+    window["fou2Img"].y = 330;
+    window["fou2Img"].x = 10; 
+
+	window["kalImg"].onMouseOver = function (){
+		window["clickSound"].play("click");
+		stage.removeChild(window["kalImg"]);
+		stage.addChild(window["kal2Img"]);
+		stage.update();
+		
+		window["kal2Img"].onMouseOut = function (){
+			stage.removeChild(window["kal2Img"]);
+			stage.addChild(window["kalImg"]);
+			stage.update();
+		};
+	};
+	
+	window["batImg"].onMouseOver = function (){
+		window["clickSound"].play("click");
+		stage.removeChild(window["batImg"]);
+		stage.addChild(window["bat2Img"]);
+		stage.update();
+		
+		window["bat2Img"].onMouseOut = function (){
+			stage.removeChild(window["bat2Img"]);
+			stage.addChild(window["batImg"]);
+			stage.update();
+		};
+	};	
+	
+	window["troImg"].onMouseOver = function (){
+		window["clickSound"].play("click");
+		stage.removeChild(window["troImg"]);
+		stage.addChild(window["tro2Img"]);
+		stage.update();
+		
+		window["tro2Img"].onMouseOut = function (){
+			stage.removeChild(window["tro2Img"]);
+			stage.addChild(window["troImg"]);
+			stage.update();
+		};
+	};	
+	
+	window["fouImg"].onMouseOver = function (){
+		window["clickSound"].play("click");
+		stage.removeChild(window["fouImg"]);
+		stage.addChild(window["fou2Img"]);
+		stage.update();
+		
+		window["fou2Img"].onMouseOut = function (){
+			stage.removeChild(window["fou2Img"]);
+			stage.addChild(window["fouImg"]);
+			stage.update();
+		};
+	};
+}
+
+function removeWeaponButton(){
+    stage.removeChild(window["shape4"]);
+    stage.removeChild(window["kalImg"]);
+    stage.removeChild(window["batImg"]);
+    stage.removeChild(window["troImg"]);
+	stage.removeChild(window["fouImg"]);
+	stage.removeChild(window["kal2Img"]);
+    stage.removeChild(window["bat2Img"]);
+    stage.removeChild(window["tro2Img"]);
+	stage.removeChild(window["fou2Img"]);
 }
 
 function loadTopBar(){
@@ -178,6 +409,7 @@ function loadTopBar(){
     coiImg.x = 1100;
     coiImg.y = 4;
     
+	
     stage.addChild(shape);
 
     stage.addChild(lvlImg);
@@ -188,6 +420,12 @@ function loadTopBar(){
     stage.addChild(sanImg); 
     stage.addChild(heaImg);
     stage.addChild(coiImg);
+	
+	var battery1 = new Battery('stage', { x: 130, y: 5 });
+	var total = 50;
+	var ressources = 39;
+	var percentUsed = ressources*100/total;
+	battery1.set_data( { bar : percentUsed, line : 80, total: total , ressources : ressources } );
 }
 
 

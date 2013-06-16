@@ -28,11 +28,14 @@ p.addTile = function ( $tile, $x, $y, $z ){
 
     $tile.content.onClick = function (){
         if (this.tile.posZ !== 32){
-            this.tile.map.movePlayer ( this.tile.posX, this.tile.posY );
-            socket.emit('playerMove', { name : myClientId, posx: this.tile.posX, posy: this.tile.posY } );
-        }
-        if (this.tile.id === 106){
-			this.tile.map.movePlayer ( this.tile.posX-1, this.tile.posY );
+			if (recolt !== true){
+				socket.emit('playerMove', { posx: this.tile.posX, posy: this.tile.posY } );
+				//this.tile.map.movePlayer ( this.tile.map.player, this.tile.posX, this.tile.posY );
+			}
+		}
+		
+		if (this.tile.id === 106){
+			socket.emit('playerMove', { posx: this.tile.posX-1, posy: this.tile.posY } );
 			var tileX = this.tile.posX;
 			var tileY = this.tile.posY;
 			if ( this.tile.map.player.waitingList.length === 0 ){
@@ -78,9 +81,9 @@ p.addTile = function ( $tile, $x, $y, $z ){
 					});
 				};
 			}
-        }
-        if (this.tile.id === 116){
-            this.tile.map.movePlayer ( this.tile.posX-1, this.tile.posY );
+		}
+		if (this.tile.id === 116){
+			socket.emit('playerMove', { posx: this.tile.posX-1, posy: this.tile.posY } );
 			var tileX = this.tile.posX;
 			var tileY = this.tile.posY;
 			if ( this.tile.map.player.waitingList.length === 0 ){
@@ -123,9 +126,9 @@ p.addTile = function ( $tile, $x, $y, $z ){
 					socket.emit('updateSalesRessources', { playerName : "Justin" } );
 				};
 			}
-        }
-        if (this.tile.id === 126){
-            this.tile.map.movePlayer ( this.tile.posX-1, this.tile.posY );
+		}
+		if (this.tile.id === 126){
+			socket.emit('playerMove', { posx: this.tile.posX-1, posy: this.tile.posY } );
 			var tileX = this.tile.posX;
 			var tileY = this.tile.posY;
 			if ( this.tile.map.player.waitingList.length === 0 ){
@@ -153,11 +156,12 @@ p.addTile = function ( $tile, $x, $y, $z ){
 				saleItTxt.onMouseOver = function (){
 					saleItTxt.color = "#00DD00";
 					stage.update();
+					saleItTxt.onMouseOut = function (){
+						saleItTxt.color = "#FFFFFF";
+						stage.update();
+					};
 				};
-				saleItTxt.onMouseOut = function (){
-					saleItTxt.color = "#FFFFFF";
-					stage.update();
-				};
+				
 				saleItTxt.onClick = function (){
 					myMap.removeTile(myMap.getTileAt(tileX,tileY,32));
 					createjs.Ticker.addListener (window[clientid]);
@@ -168,44 +172,46 @@ p.addTile = function ( $tile, $x, $y, $z ){
 					socket.emit('updateSalesRessources', { playerName : "Justin" } );
 				};
 			}
-        }
-    };
-    
-    $tile.content.onMouseOver = function (){
-        if (this.tile.id === 107){
-            this.tile.map.addTile ( new Tile ( TileType.PNG, gfx.tile("106"), true, 0, -58, 106, false ), this.tile.posX, this.tile.posY, 32 );
+		}
+	}
+	
+	$tile.content.onMouseOver = function (){
+		if (recolt == true){
+			if (this.tile.id === 107){
+				this.tile.map.addTile ( new Tile ( TileType.PNG, gfx.tile("106"), true, 0, -58, 106, false ), this.tile.posX, this.tile.posY, 32 );
+				this.tile.map.removeTile(this.tile);
+			}
+			if (this.tile.id === 117){
+				this.tile.map.addTile ( new Tile ( TileType.PNG, gfx.tile("116"), true, 0, -58, 116, false ), this.tile.posX, this.tile.posY, 32 );
+				this.tile.map.removeTile(this.tile);
+			}
+			if (this.tile.id === 127){
+				this.tile.map.addTile ( new Tile ( TileType.PNG, gfx.tile("126"), true, 0, -58, 126, false ), this.tile.posX, this.tile.posY, 32 );
+				this.tile.map.removeTile(this.tile);
+			}
+		}
+	};
+	$tile.content.onMouseOut = function (){
+		if (this.tile.id === 106){
+			this.tile.map.addTile ( new Tile ( TileType.PNG, gfx.tile("107"), true, 0, -58, 107, false ), this.tile.posX, this.tile.posY, 32 );
 			this.tile.map.removeTile(this.tile);
-        }
-        if (this.tile.id === 117){
-            this.tile.map.addTile ( new Tile ( TileType.PNG, gfx.tile("116"), true, 0, -58, 116, false ), this.tile.posX, this.tile.posY, 32 );
-            this.tile.map.removeTile(this.tile);
-        }
-        if (this.tile.id === 127){
-            this.tile.map.addTile ( new Tile ( TileType.PNG, gfx.tile("126"), true, 0, -58, 126, false ), this.tile.posX, this.tile.posY, 32 );
-            this.tile.map.removeTile(this.tile);
-        }
-    };
-    $tile.content.onMouseOut = function (){
-        if (this.tile.id === 106){
-            this.tile.map.addTile ( new Tile ( TileType.PNG, gfx.tile("107"), true, 0, -58, 107, false ), this.tile.posX, this.tile.posY, 32 );
-            this.tile.map.removeTile(this.tile);
-        }
-        if (this.tile.id === 116){
-            this.tile.map.addTile ( new Tile ( TileType.PNG, gfx.tile("117"), true, 0, -58, 117, false ), this.tile.posX, this.tile.posY, 32 );
-            this.tile.map.removeTile(this.tile);
-        }
-        if (this.tile.id === 126){
-            this.tile.map.addTile ( new Tile ( TileType.PNG, gfx.tile("127"), true, 0, -58, 127, false ), this.tile.posX, this.tile.posY, 32 );
-            this.tile.map.removeTile(this.tile);
-        }
-    };   
+		}
+		if (this.tile.id === 116){
+			this.tile.map.addTile ( new Tile ( TileType.PNG, gfx.tile("117"), true, 0, -58, 117, false ), this.tile.posX, this.tile.posY, 32 );
+			this.tile.map.removeTile(this.tile);
+		}
+		if (this.tile.id === 126){
+			this.tile.map.addTile ( new Tile ( TileType.PNG, gfx.tile("127"), true, 0, -58, 127, false ), this.tile.posX, this.tile.posY, 32 );
+			this.tile.map.removeTile(this.tile);
+		}
+	};
 };
 
 p.removeTile = function ( $tile ){        
     var index = this.tiles.indexOf ( $tile );
 
     if ( index === -1 ){
-            throw new Error ( 'Map.removeTile : la tuile à supprimer ne fait pas partie de la carte !' );
+		throw new Error ( 'Map.removeTile : la tuile à supprimer ne fait pas partie de la carte !' );
     }
 
     this.removeChild ( $tile.content );
@@ -272,22 +278,25 @@ p.getGraph = function (){
     return graph;
 };
  
-p.movePlayer = function ( $x, $y ){
-    if ( this.player === null ){return;}
+p.movePlayer = function ( $player, $x, $y, $name ){
+    if ( window[$name] === null ){return;}
     var playerX, playerY;
-    if ( this.player.waitingList.length === 0 ){
+    if ( window[$name].waitingList.length === 0 ){
         /**
          * La liste d'attente est vide, on utilise les coordonnées réélles.
          */
-        playerX = this.player.posX;
-        playerY = this.player.posY;
+        playerX = window[$name].posX;
+        playerY = window[$name].posY;
+		
+		console.log($player);
+		console.log(playerX + " " + playerY);
     }
     else{
         /**
          * La liste d'attente n'est pas vide, on utilise les coordonnées finales.
          */
-        playerX = this.player.waitingList[this.player.waitingList.length-1][0];
-        playerY = this.player.waitingList[this.player.waitingList.length-1][1];
+        playerX = window[$name].waitingList[window[$name].waitingList.length-1][0];
+        playerY = window[$name].waitingList[window[$name].waitingList.length-1][1];
     }
     var graph = this.getGraph();
     var start = graph[playerX][playerY];
@@ -296,7 +305,8 @@ p.movePlayer = function ( $x, $y ){
     var path = Pathfinder.findPath ( graph, start, end );
     while ( path.length !== 0 ){
         var toTile = path.shift ();
-        this.player.smoothMove ( toTile.line, toTile.col );
+        //window[$name].waitingList.push ( [ $x, $y ] );
+		window[$name].smoothMove ( toTile.line, toTile.col);
     }
 };
 

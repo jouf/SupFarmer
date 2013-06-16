@@ -1,7 +1,9 @@
-//var socket = io.connect('http://10.10.18.35');
-//var socket = io.connect('http://192.168.0.19');
-var socket = io.connect('http://192.168.1.44');
+//var socket = io.connect('http://10.10.19.103');
+var socket = io.connect('http://127.0.0.1');
+//var socket = io.connect('http://192.168.1.44');
 var myClientId = null;
+var players = new Array();
+
 
 // on server connected 
 socket.on('connect', function () {
@@ -35,27 +37,38 @@ socket.on('selectPlayer', function(){
     player2.y = 225;
     player2.x = 700;
     stage.addChild(player2);
-    
-    
+        
     player1.onClick = function(e) { 
         stage.removeChild(selectTxt);
         stage.removeChild(shape);
         stage.removeChild(player1);
         stage.removeChild(player2);
         preloader.addToStage();
-        setTimeout(function(){socket.emit('newGame', {})},1000);
+        setTimeout(function(){socket.emit('newGame', {playerName:"Maurel"})},1000);
     };
     
     
-    player2.onClick = function(e) { alert("Justin"); };
+    player2.onClick = function(e) { 
+		stage.removeChild(selectTxt);
+        stage.removeChild(shape);
+        stage.removeChild(player1);
+        stage.removeChild(player2);
+        preloader.addToStage();
+        setTimeout(function(){socket.emit('newGame', {playerName:"Justin"})},1000);
+	};
 }); 
  
  
 socket.on('newGame', function(data){
+	players.push(myClientId)
+	socket.emit('adduser', prompt("What's your name?"));
     canvas.onmousemove = mouseCheck;
     canvas.onmousedown = pressHandler;
-    window[clientid+"Name"] = new createjs.Text(data.player.name, "20px Arial", "#ff7700");
-    window[clientid] = new Player ( TileType.DRAW, gfx.player ("pics/farmer.png","stay"));
+	
+	createjs.Ticker.addEventListener("tick", tick);
+	
+    window[myClientId+"Name"] = new createjs.Text(data.player.name, "20px Arial", "#ff7700");
+    window[myClientId] = new Player ( TileType.DRAW, gfx.player ("pics/farmer.png","stay"));
     
     window["lvlTxt"] = new createjs.Text(data.player.level, "16px Arial", "#ffffff");
     window["lvlTxt"].x = 140;
@@ -93,15 +106,16 @@ socket.on('newGame', function(data){
     shishi.graphics.beginFill("#000000").drawRect(800, 450, 600, 400);
     shishi.alpha = 0.7;
     
-    createjs.Ticker.addListener ( window[clientid], true );
+    createjs.Ticker.addListener ( window[myClientId], true );
     myMap = new Map ();
     
     JSONMapLoader.load ( myMap, data.stringMap.layers[0].data, data.stringMap.layers[0].data1, tiles );
     
     stage.addChild ( myMap );
-    myMap.addTile ( window[clientid], data.player.x, data.player.y, 31 );
-    myMap.player = window[clientid];
-    stage.addChild(window[clientid+"Name"]);
+    myMap.addTile ( window[myClientId], data.player.x, data.player.y, 31 );
+    myMap.player = window[myClientId];
+	
+    stage.addChild(window[myClientId+"Name"]);
     stage.enableMouseOver();
 	
 	loadTopBar();
@@ -118,11 +132,6 @@ socket.on('newGame', function(data){
     stage.addChild(shishi);
 });
 
-// on connection to server, ask for user's name with an anonymous callback
-	socket.on('connect', function(){
-		// call the server-side function 'adduser' and send one parameter (value of prompt)
-		socket.emit('adduser', prompt("What's your name?"));
-	});
 
 	// listener, whenever the server emits 'updatechat', this updates the chat body
 	socket.on('updatechat', function (username, data) {
@@ -162,25 +171,119 @@ socket.on('playerOnMap', function(data){
 
 socket.on('playerConnected', function(data) {
     var clientid = data.clientid;
-    window[clientid+"Name"] = new createjs.Text(clientid, "20px Arial", "#ff7700");
-    window[clientid+"Name"].y = 30;
-    
-    window[clientid] = new Player(TileType.DRAW, gfx.player ("pics/farmer.png","stay"));
-    
-    myMap.addTile ( window[clientid], 12, 15, 31 );
-    stage.addChild( window[clientid+"Name"] );
-    console.log('Player id: ' + clientid + ' has joined the game in room: ');
+	
+	if(myClientId !== clientid) {
+		players.push(clientid);
+		
+		window[clientid+"Name"] = new createjs.Text( data.clientid, "20px Arial", "#ff7700");
+		window[clientid+"Name"].y = 30;
+		
+		window[clientid] = new Player(TileType.DRAW, gfx.player ("pics/farmer.png","stay"));
+		
+		myMap.addTile ( window[clientid], 10, 15, 31 );
+		stage.addChild( window[clientid+"Name"] );
+		
+		
+		console.log('Player id: ' + clientid + ' has joined the game in room: ');
+		console.log('////======> '+ window[clientid]);
+	}
 });
 
-socket.on('playerMove', function(data) {
-    window[data.name].posX = data.posx;
-    window[data.name].posY = data.posy;
+socket.on('movePlayer', function(data) {
+	window["movedPlayer"] = data.name;
+	//if(myClientId !== data.name) {
+		console.log("------- > "+window[data.name]);
+		console.log("------- > Player to move : "+ data.name);
+		console.log("------- > Position X : "+ window[data.name].posX + " - Position Y : " + window[data.name].posY);
+		//window[data.name] = myMap.getTileAt(data.posx, data.posy, 31);
+		myMap.movePlayer ( window[data.name], data.posx, data.posy, data.name );
+		
+		//window[data.name].posX = data.posx;
+		//window[data.name].posY = data.posy;
+		//myMap.update();
+	//}
 });
 
 socket.on('playerDisconnected', function(data) {
+	for(var i = 0; i < players.length; i++) {
+		console.log(players[i]);
+		if(players[i] === data.clientid) {
+			players.splice(i, 1);
+		}
+    }
+
     if(myClientId !== data.clientid) {
         myMap.removeTile ( window[data.clientid] );
         stage.removeChild( window[ data.clientid+"Name" ] );
         console.log('Player id: ' + data.clientid + ' has left game from room: ');
     }
 });
+
+var waitingList = [];
+var decalX = 0;
+var decalY = 0;
+function tick(){ 
+	for(var i = 0; i < players.length; i++) {
+		if (players[i] === window["movedPlayer"]){
+			if ( decalX !== 0 || decalY !== 0 ){
+				console.log("X : "+decalX);
+				console.log("Y : "+decalY);
+				window[window["movedPlayer"]+"Name"].x = window[players[i]].content.x+5;
+				window[window["movedPlayer"]+"Name"].y = window[players[i]].content.y-70;
+
+				//le joueur va vers le haut
+				if ( decalX > 0 ){
+					window[players[i]].content.x += 4;
+					decalX -= 4;
+				}
+				//le joueur va vers le bas
+				else if ( decalX < 0 ){
+					window[players[i]].content.x -= 4;
+					decalX += 4;
+				}
+
+				//Le joueur va a droite
+				if ( decalY > 0 ){
+					window[players[i]].content.y += 2;
+					decalY -= 2;
+				}
+				//le joueur va a gauche
+				else if ( decalY < 0 ){
+					window[players[i]].content.y -= 2;
+					decalY += 2;
+				}
+				
+				window[players[i]].needUpdate = true;
+			}
+			else if ( window[players[i]].needUpdate ){
+				console.log("MAJ");
+			   myMap.updateDepth();
+			   window[players[i]].needUpdate = false;
+			}
+			else if ( window[players[i]].waitingList.length !== 0 ){
+				var position = window[players[i]].waitingList.shift();
+				var destinationX = position[0];
+				var destinationY = position[1];
+				
+				console.log("Player PosX : "+ window[players[i]].posX);
+				console.log("Player DestX : "+destinationX);
+				
+				
+				if ( window[players[i]].posX - destinationX > 0 || window[players[i]].posY - destinationY > 0 ){
+					window[players[i]].needUpdate = true;
+					console.log(window[players[i]].needUpdate);
+				}
+				
+				var toTile = myMap.getTileAt (destinationX, destinationY, 0 );
+				decalX = toTile.content.x - window[players[i]].content.x;
+				decalY = toTile.content.y - window[players[i]].content.y;
+				
+				console.log("decal X : "+decalX);
+				console.log("decal Y : "+decalY);
+				
+				window[players[i]].posX=destinationX;
+				window[players[i]].posY=destinationY;
+			}
+		}
+	}
+}

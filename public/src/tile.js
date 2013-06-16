@@ -50,7 +50,6 @@ var tiles = {
 
     //FRIGO
     130:  function(){return new Tile ( TileType.PNG, gfx.tile("130"), true, 0, -100, 130, false );}
-
 };
 
 

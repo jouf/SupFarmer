@@ -10,41 +10,48 @@ var curentAnimation;
 var oldPlayerX = 0;
 var oldPlayerY = 0;
 
-function stay (){
-    oldPlayerX = window[clientid].posX;
-    oldPlayerY = window[clientid].posY;
-    createjs.Ticker.removeListener ( window[clientid] );
-    myMap.removeTile(window[clientid]);
-    window[clientid] = new Player ( TileType.DRAW, gfx.player ("pics/farmer.png","stay"));
+var seedAction = false;
+var plantAction = false;
+var attackAction = false;
+var recolt = false;
 
-    myMap.player = window[clientid];
-    myMap.addTile ( window[clientid], oldPlayerX, oldPlayerY, 31 );
-    createjs.Ticker.addListener ( window[clientid], true );
+
+
+function stay (){
+    oldPlayerX = window[myClientId].posX;
+    oldPlayerY = window[myClientId].posY;
+    createjs.Ticker.removeListener ( window[myClientId] );
+    myMap.removeTile(window[myClientId]);
+    window[myClientId] = new Player ( TileType.DRAW, gfx.player ("pics/farmer.png","stay"));
+
+    myMap.player = window[myClientId];
+    myMap.addTile ( window[myClientId], oldPlayerX, oldPlayerY, 31 );
+    createjs.Ticker.addListener ( window[myClientId], true );
 }
 
 function turnUp (){
-    oldPlayerX = window[clientid].posX;
-    oldPlayerY = window[clientid].posY;
-    createjs.Ticker.removeListener ( window[clientid] );
-    myMap.removeTile(window[clientid]);
-    window[clientid] = new Player ( TileType.DRAW, gfx.player ("pics/farmer.png","walk"));
-
-    myMap.player = window[clientid];
-    myMap.addTile ( window[clientid], oldPlayerX, oldPlayerY, 31 );
-    createjs.Ticker.addListener ( window[clientid], true );
+    oldPlayerX = window[myClientId].posX;
+    oldPlayerY = window[myClientId].posY;
+    createjs.Ticker.removeListener ( window[myClientId] );
+    myMap.removeTile(window[myClientId]);
+    window[myClientId] = new Player ( TileType.DRAW, gfx.player ("pics/farmer.png","walk"));
+	myMap.addTile ( window[myClientId], oldPlayerX, oldPlayerY, 31 );
+    myMap.player = window[myClientId];
+    
+    createjs.Ticker.addListener ( window[myClientId], true );
 } 
 
 
 function turnDown (){
-    oldPlayerX = window[clientid].posX;
-    oldPlayerY = window[clientid].posY;
-    createjs.Ticker.removeListener ( window[clientid] );
-    myMap.removeTile(window[clientid]);
-    window[clientid] = new Player ( TileType.DRAW, gfx.player ("pics/farmer.png","back"));
-
-    myMap.player = window[clientid];
-    myMap.addTile ( window[clientid], oldPlayerX, oldPlayerY, 31 );
-    createjs.Ticker.addListener ( window[clientid], true );
+    oldPlayerX = window[myClientId].posX;
+    oldPlayerY = window[myClientId].posY;
+    createjs.Ticker.removeListener ( window[myClientId] );
+    myMap.removeTile(window[myClientId]);
+    window[myClientId] = new Player ( TileType.DRAW, gfx.player ("pics/farmer.png","back"));
+	myMap.addTile ( window[myClientId], oldPlayerX, oldPlayerY, 31 );
+    myMap.player = window[myClientId];
+    
+    createjs.Ticker.addListener ( window[myClientId], true );
 }
 
 function init(){
@@ -73,10 +80,3 @@ function mouseCheck(e){
 }
 
 function pressHandler(){}
-
-function tick(){ 
-    if(update){
-        update = false;
-        stage.update(); 
-    }
-}
